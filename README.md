@@ -1,7 +1,18 @@
-# Cryptify 🔒👀
-> Cryptify your digital communication!
+# 🔥Crypticor🔥
+> Crypticor, your digital crypt to safe your loved data
 
+Key Points:
+- Cryptography made easy with Crypticor
+- Secure your secrets with Crypticor
+- Protect your privacy with Crypticor
+- Unlock the power of cryptography with Crypticor
+- Keep your data safe with Crypticor's encryption
+- Easy to use GUI
 
+Deep in the heart of an ancient forest lies a crypt, hidden from the eyes of the world. The entrance is concealed behind thick vines and moss-covered stones. The air inside is musty and damp, and the only sound is the occasional drip of water echoing through the halls. The walls are lined with intricate carvings and symbols, their meaning lost to time. In the dim light, shadows dance on the walls, giving the impression of secrets lurking just out of sight. This is a place of mystery and intrigue, where secrets are hidden and kept safe for generations to come.
+
+---
+### Description & Features
 
 Simple Program for easy use of cryptography with a simple GUI.
 
@@ -12,7 +23,6 @@ Goal is that everyone can easily encrypt messages with that application. It's no
 
 
 Features: 
-
 - Create Private and Public keys (and saving in cache)
 - Local safe of public and private keys
 - Encrypt messages (and saving in cache)
@@ -29,16 +39,17 @@ Features:
 
 ### To Do:
 
-- program the fundamental cryptify python file
-  - Add Encrypt and Decrypt mechanism (with AES and RSA)
-  - Add local safe (with keyring modul)
-  - Add password-security & management of keys 
-    - Password for the system (optional)
-  - Add active private and public key system -> there can be always one public and one private be active
-- Add licence (MIT?)
-- GUI programming for Android and Windows
-- Porting for Android and Windows (publishing in PlayStore + exe download or adding in WindowsStore)
-- Complete Documentation
+- [x] planning and concept
+- [ ] program the fundamental cryptify python file
+  - [ ] Add Encrypt and Decrypt mechanism (with AES and RSA)
+  - [ ] Add local safe (with keyring modul)
+  - [ ] Add password-security & management of keys 
+    - [ ] Password for the system (optional)
+  - [ ] Add active private and public key system -> there can be always one public and one private be active
+- [ ] Add licence (MIT?)
+- [ ] GUI programming for Android and Windows
+- [ ] Porting for Android and Windows (publishing in PlayStore + exe download or adding in WindowsStore)
+- [ ] Complete Documentation
 
 
 
@@ -73,6 +84,9 @@ It's a library which efforts all needed features and is a Python Binding of the 
 
 ---
 ### Concept
+
+The design is inspired by a crypt. 
+*On the images the crypt motive is missing.
 
 <div style="align:center;">
 <img src="./concept/GUI-Concept-01-Start.png" alt="Main-Screen"></img>
