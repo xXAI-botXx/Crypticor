@@ -125,6 +125,8 @@ Mood-Board:
 - Protection
 - Underworld
 
+*Following Concepts contains the old name -> think there would stand Crypticor instead of cryptify.
+
 <div style="align:center;">
 <img src="./concept/GUI-Concept-01-Start.png" alt="Main-Screen"></img>
 <img src="./concept/GUI-Concept-02-Generate Keys.png" alt="Generate Keys Screen"></img>
