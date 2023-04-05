@@ -9,6 +9,8 @@ Key Points:
 - Keep your data safe with Crypticor's encryption
 - Easy to use GUI
 
+The mystical crypt is shrouded in secrecy, hidden away from prying eyes in a location known only to a select few. Its entrance is guarded by a heavy stone door, etched with mysterious symbols that seem to glow in the dim light. The air inside is thick and musty, and the only sound is the occasional drip of water from the damp stone ceiling. As you move deeper into the crypt, the darkness seems to close in around you, and you can feel the weight of centuries of history bearing down upon you. It's a place where secrets are kept safe, and the mysteries of the past are hidden away.
+
 Deep in the heart of an ancient forest lies a crypt, hidden from the eyes of the world. The entrance is concealed behind thick vines and moss-covered stones. The air inside is musty and damp, and the only sound is the occasional drip of water echoing through the halls. The walls are lined with intricate carvings and symbols, their meaning lost to time. In the dim light, shadows dance on the walls, giving the impression of secrets lurking just out of sight. This is a place of mystery and intrigue, where secrets are hidden and kept safe for generations to come.
 
 ---
@@ -44,7 +46,7 @@ Features:
   - [ ] Add Encrypt and Decrypt mechanism (with AES and RSA)
   - [ ] Add local safe (with keyring modul)
   - [ ] Add password-security & management of keys 
-    - [ ] Password for the system (optional)
+  - [ ] Password for the system (optional)
   - [ ] Add active private and public key system -> there can be always one public and one private be active
 - [ ] Add licence (MIT?)
 - [ ] GUI programming for Android and Windows
@@ -85,8 +87,33 @@ It's a library which efforts all needed features and is a Python Binding of the 
 ---
 ### Concept
 
-The design is inspired by a crypt. 
-*On the images the crypt motive is missing.
+The design is inspired by a crypt. <br>
+-> On the images the crypt motive is missing.<br>
+Mood-Board:
+- Fire
+- Old Stone
+- Dripping Water
+- Candles
+- Silence
+- Grave
+- Old Stories
+- stone pillars
+- Garden with metal fence
+- Urn
+- Death
+- Eternal
+- Angel
+- Ancient Powers
+- Hidden
+- Clandestine
+- Safed
+- Timeless
+- Mysterious
+- Sacred
+- Darkness
+- Resting place
+- Protection
+- Underworld
 
 <div style="align:center;">
 <img src="./concept/GUI-Concept-01-Start.png" alt="Main-Screen"></img>
