@@ -21,6 +21,7 @@ Features:
 - Windows App
 - Android App
 - Adding more than only Strings as data? 
+- Adding Hashing Features (which should be added?)
 
 
 
@@ -70,6 +71,19 @@ It's a library which efforts all needed features and is a Python Binding of the 
 - how to send a signature and how to check a signature?
 
 
+---
+### Concept
+
+<div style="align:center;">
+<img src="./concept/GUI-Concept-01-Start.png" alt="Main-Screen"></img>
+<img src="./concept/GUI-Concept-02-Generate Keys.png" alt="Generate Keys Screen"></img>
+<img src="./concept/GUI-Concept-03-Load Keys.png" alt="Load Keys Screen"></img>
+<img src="./concept/GUI-Concept-04-Activation-pop-Up.png" alt="Active Private Keys"></img>
+<img src="./concept/GUI-Concept-04-Activation-pop-Up - Unactive.png" alt="(un-)Active Private Keys"></img>
+<img src="./concept/GUI-Concept-05-Activation-pop-Up-Public.png" alt="Active Public Keys"></img>
+<img src="./concept/GUI-Concept-05-Activation-pop-Up-Public-Unactive.png" alt="(un-)Active Public Keys"></img>
+<img src="./concept/GUI-Concept-06-set-password.png" alt="Set Password"></img>
+</div>
 
 ---
 
