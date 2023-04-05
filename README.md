@@ -1,17 +1,27 @@
 # 🔥Crypticor🔥
 > Crypticor, your digital crypt to safe your loved data
 
+
+
 Key Points:
+
 - Cryptography made easy with Crypticor
+
 - Secure your secrets with Crypticor
+
 - Protect your privacy with Crypticor
+
 - Unlock the power of cryptography with Crypticor
+
 - Keep your data safe with Crypticor's encryption
+
 - Easy to use GUI
+
+  
 
 The mystical crypt is shrouded in secrecy, hidden away from prying eyes in a location known only to a select few. Its entrance is guarded by a heavy stone door, etched with mysterious symbols that seem to glow in the dim light. The air inside is thick and musty, and the only sound is the occasional drip of water from the damp stone ceiling. As you move deeper into the crypt, the darkness seems to close in around you, and you can feel the weight of centuries of history bearing down upon you. It's a place where secrets are kept safe, and the mysteries of the past are hidden away.
 
-Deep in the heart of an ancient forest lies a crypt, hidden from the eyes of the world. The entrance is concealed behind thick vines and moss-covered stones. The air inside is musty and damp, and the only sound is the occasional drip of water echoing through the halls. The walls are lined with intricate carvings and symbols, their meaning lost to time. In the dim light, shadows dance on the walls, giving the impression of secrets lurking just out of sight. This is a place of mystery and intrigue, where secrets are hidden and kept safe for generations to come.
+
 
 ---
 ### Description & Features
