@@ -53,15 +53,28 @@ Features:
 
 - [x] planning and concept
 - [ ] program the fundamental cryptify python file
-  - [ ] Add Encrypt and Decrypt mechanism (with AES and RSA)
-  - [ ] Add local safe (with keyring modul)
-  - [ ] Add password-security & management of keys 
-  - [ ] Password for the system (optional)
-  - [ ] Add active private and public key system -> there can be always one public and one private be active
+  - [x] Add Encrypt and Decrypt mechanism (with AES and RSA)
+  - [x] Add local safe 
+  - [x] Add password-security & management of keys 
+  - [x] Password for the system (optional)
+  - [x] Add active private and public key system -> there can be always one public and one private be active
+  - [ ] Add Signature
+  - [x] Add Show-All -> Shows all keys with numbers, maybe you need no private and public in that way
+  - [ ] Add networking: sending keys/encryptet messages via mail 
+  - [ ] Add pairing of keys -> the keys make only in a pair sense, so maybe add that as feature
+  - [ ] Add help function
 - [ ] Add licence (MIT?)
+- [x] Terminal Application
 - [ ] GUI programming for Android and Windows
 - [ ] Porting for Android and Windows (publishing in PlayStore + exe download or adding in WindowsStore)
 - [ ] Complete Documentation
+  - [ ] Add Installation Part
+- [ ] Testing
+  - [x] Fundamental Functions
+  - [x] Terminal
+  - [ ] Password usage
+  - [ ] Adding a friends public key -> encoding have to be analyized
+
 
 
 

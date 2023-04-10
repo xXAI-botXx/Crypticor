@@ -6,6 +6,7 @@ import nacl.encoding
 import nacl.hash
 # for assymetric
 from nacl.public import PrivateKey, Box
+from nacl.bindings.utils import sodium_memcmp
 
 from PIL import Image
 from PIL.PngImagePlugin import PngInfo
@@ -23,9 +24,12 @@ import pyperclip
 
 class Crypticor:
 
-    ENCODING = nacl.encoding.Base64Encoder #nacl.encoding.RawEncoder #nacl.encoding.Base64Encoder    #"unicode_escape"
+    ENCODING = nacl.encoding.HexEncoder #nacl.encoding.RawEncoder #nacl.encoding.Base64Encoder    #"unicode_escape"
     KEYSTORE_REL_PATH = "./data/keystore"
     DATA_REL_PATH = "./data"
+
+    OUTPUT_STR = "str"
+    OUTPUT_BYTES = "b"
 
     def __init__(self, reset=False):
         self.active_private_key = None
@@ -90,6 +94,10 @@ class Crypticor:
                 # start crypticor
                 self.start()
                 return True
+            else:
+                return False
+        else:
+            return True
 
     def check_setup(self):
         number = self.get_steg_number(img_name=self.img_stag_setup_state, meta_data_name=self.meta_stag_setup_state)
@@ -232,13 +240,13 @@ class Crypticor:
             # decrypt key
             key = self.crypt.decrypt(cache)
 
-            if output == "str":
+            if output == Crypticor.OUTPUT_STR:
                 # return it as str
-                return key.decode("utf-8")
+                return key.hex()
             else:    # b binary
                 return key
 
-    def show_available_keys(self, only_names=False, private_key=True) -> list:
+    def show_available_keys(self, only_names=False, private_key=True, hex_encoding=True) -> list:
         if self.logged_in:
             if private_key:
                 PATH = f"{Crypticor.KEYSTORE_REL_PATH}/PRIVATE"
@@ -258,7 +266,10 @@ class Crypticor:
                         cache = f.read()
                     
                     # decrypt key
-                    keys[name] = self.crypt.decrypt(cache)
+                    if hex_encoding:
+                        keys[name] = self.crypt.decrypt(cache).hex()
+                    else:
+                        keys[name] = self.crypt.decrypt(cache)
                 return keys.items()
                 # get a str
                 # keys_string = ""
@@ -270,8 +281,8 @@ class Crypticor:
     def create_user_password(self, password:str):
         # hash it and safe it in a file
         hash_value_psw = self.hasher(password.encode(), encoder=Crypticor.ENCODING)
-        print(hash_value_psw)
-        print(type(hash_value_psw))
+        # print(hash_value_psw)
+        # print(type(hash_value_psw))
 
         # save the hashed psw
         with open(f"{Crypticor.DATA_REL_PATH}/user_psw.txt", "wb") as f:
@@ -279,6 +290,15 @@ class Crypticor:
         
         # set active
         self.create_steg_number(img_name=self.img_stag_user_pwd_state, meta_data_name=self.meta_stag_user_pwd_state, number=1)
+
+    def deactivate_user_password(self):
+        if self.logged_in:
+            # save the hashed psw
+            with open(f"{Crypticor.DATA_REL_PATH}/user_psw.txt", "wb") as f:
+                f.write(b"")
+            
+            # set active
+            self.create_steg_number(img_name=self.img_stag_user_pwd_state, meta_data_name=self.meta_stag_user_pwd_state, number=0)
 
     def user_password_correct(self, password:str):
         # check with saved hash file
@@ -351,35 +371,44 @@ class Crypticor:
         new_meta_data.add_text(meta_data_name, str(number))
         img.save(img_name, pnginfo=new_meta_data)
 
-    def encrypt_message(self, msg:str, key_name:str, use_active_key_if_active=True, private_key=False):
+    def encrypt_message(self, msg:str, output="str"):
+        # private_key_name:str, public_key_name:str, use_active_key_if_active=True
         if self.logged_in:
-            key = self.get_key(key_name, private_key=private_key)
-            if private_key:
-                active_key = self.active_private_key
-            else:
-                active_key = self.active_public_key
+            #key = self.get_key(key_name, private_key=private_key)
             msg = msg.encode("utf-8")
-            if active_key != None and use_active_key_if_active:
-                box = nacl.secret.SecretBox(active_key)
-                return box.encrypt(msg)    
-            else:
-                box = nacl.secret.SecretBox(key)
-                return box.encrypt(msg)    
 
-    def decrypt_message(self, msg:str, key_name:str, use_active_key_if_active=True, private_key=True):
+            private_key = nacl.public.PrivateKey(self.active_private_key)
+            public_key = nacl.public.PublicKey(self.active_public_key)
+
+            # print(f"Private Key: {private_key}\ntype:{type(private_key)}")
+            # print(f"Public Key: {public_key}\ntype:{type(public_key)}")
+            box = nacl.public.Box(private_key, public_key)
+            enc_msg = box.encrypt(msg, encoder=Crypticor.ENCODING) 
+            if output == Crypticor.OUTPUT_STR:
+                #enc_msg = Crypticor.ENCODING.decode(enc_msg)
+                #enc_msg = enc_msg.ciphertext.decode()    #.hex()
+                enc_msg = enc_msg.decode()
+            return enc_msg 
+
+    def decrypt_message(self, msg:str, output="str"):
+        #key_name:str, use_active_key_if_active=True, private_key=True,
         if self.logged_in:
-            key = self.get_key(key_name, private_key=private_key)
-            if private_key:
-                active_key = self.active_private_key
-            else:
-                active_key = self.active_public_key
-            msg = msg.encode("utf-8")
-            if active_key != None and use_active_key_if_active:
-                box = nacl.secret.SecretBox(active_key)
-                return box.decrypt(msg)    
-            else:
-                box = nacl.secret.SecretBox(key)
-                return box.decrypt(msg)    
+            #key = self.get_key(key_name, private_key=private_key)
+            
+            private_key = nacl.public.PrivateKey(self.active_private_key)
+            public_key = nacl.public.PublicKey(self.active_public_key)
+
+            # print(f"MSG: {msg}")
+            # print(type(msg))
+            msg = msg.encode()    #Crypticor.ENCODING.decode(msg)
+            # print(f"MSG: {msg}")
+            # print(type(msg))
+
+            box = nacl.public.Box(private_key, public_key)
+            dec_msg = box.decrypt(msg, encoder=Crypticor.ENCODING)
+            if output == Crypticor.OUTPUT_STR:
+                dec_msg = dec_msg.decode("utf-8")    #Crypticor.ENCODING.decode(dec_msg)
+            return dec_msg  
 
 if __name__ == "__main__":
     crypt = Crypticor(reset=False)
