@@ -189,3 +189,6 @@ GUI:
 - https://flet.dev/docs/guides/python/getting-started
 - https://github.com/flet-dev/flet
 
+
+
+https://docs.python.org/3.11/library/codecs.html#standard-encodings

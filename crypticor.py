@@ -23,7 +23,7 @@ import pyperclip
 
 class Crypticor:
 
-    ENCODING = "unicode_escape"
+    ENCODING = nacl.encoding.Base64Encoder #nacl.encoding.RawEncoder #nacl.encoding.Base64Encoder    #"unicode_escape"
     KEYSTORE_REL_PATH = "./data/keystore"
     DATA_REL_PATH = "./data"
 
@@ -184,53 +184,35 @@ class Crypticor:
     def set_key_active(self, key_name:str, private_key=True):
         if self.logged_in:
             if private_key:
-                self.active_private_key = get_key(key_name, private_key=True)
+                self.active_private_key = self.get_key(key_name, private_key=True)
             else:
-                self.active_public_key = get_key(key_name, private_key=False)
+                self.active_public_key = self.get_key(key_name, private_key=False)
+
+    def deactivate(self, private_key=True, public_key=True):
+        if private_key:
+            self.active_private_key = None
+        if public_key:
+            self.active_public_key = None
 
     def generate_private_and_public_key(self, name:str):
         private_key = PrivateKey.generate()
         public_key = private_key.public_key
-        self.add_keystore_entry(name, private_key, private_key=True)
-        self.add_keystore_entry(name, public_key, private_key=False)
+        self.add_keystore_entry(name, private_key._private_key, private_key=True)
+        self.add_keystore_entry(name, public_key._public_key, private_key=False)
         return name
-
-    def save_in_clipboard(self, key:bytes):
-        if self.logged_in:
-            text = key.decode(Crypticor.ENCODING)
-            pyperclip.copy(text)
 
     def content_to_clipboard(self, content:str):
         if type(content) != str:
             content = str(content)
         pyperclip.copy(content)
 
-    def save_in_clipboard(self, key_number, private_key:bool):
+    def save_in_clipboard(self, key_name:str, private_key:bool):
         if self.logged_in:
-            if private_key:
-                PATH = f"{Crypticor.KEYSTORE_REL_PATH}/PRIVATE"
-            else:
-                PATH = f"{Crypticor.KEYSTORE_REL_PATH}/PUBLIC"
-
-            key_files = [f for f in os.listdir(PATH) if f.endswith(".txt")]
-            names = [f.replace(".txt", "") for f in key_files]
-
-            if key_number > len(key_files) or key_number < 1:
-                return
-
-            name = names[key_number-1]
-
-            cache = ""
-            with open(f"{Crypticor.KEYSTORE_REL_PATH}/{name}.txt", "rb") as f:
-                cache = f.read()
-            
-            # decrypt key
-            key = self.crypt.decrypt(cache)
-
-            text = key.decode(Crypticor.ENCODING)
+            #text = self.get_key(key_name, private_key=private_key)
+            text = key_name
             pyperclip.copy(text)
 
-    def get_key(self, name, output="str", private_key=True):
+    def get_key(self, name, output="b", private_key=True):
         if self.logged_in:
             if private_key:
                 PATH = f"{Crypticor.KEYSTORE_REL_PATH}/PRIVATE"
@@ -244,7 +226,7 @@ class Crypticor:
                 return
 
             cache = ""
-            with open(f"{Crypticor.KEYSTORE_REL_PATH}/{name}.txt", "rb") as f:
+            with open(f"{PATH}/{name}.txt", "rb") as f:
                 cache = f.read()
             
             # decrypt key
@@ -252,7 +234,7 @@ class Crypticor:
 
             if output == "str":
                 # return it as str
-                return key.decode(Crypticor.ENCODING)
+                return key.decode("utf-8")
             else:    # b binary
                 return key
 
@@ -270,13 +252,13 @@ class Crypticor:
                 return [f.replace(".txt", "") for f in key_files]
             else:
                 keys = dict.fromkeys(names, 0)
-                for key_file in zip(key_files, names):
+                for key_file, name in zip(key_files, names):
                     cache = ""
-                    with open(f"{Crypticor.KEYSTORE_REL_PATH}/{key_file}", "rb") as f:
+                    with open(f"{PATH}/{key_file}", "rb") as f:
                         cache = f.read()
                     
                     # decrypt key
-                    keys[names] = self.crypt.decrypt(cache).decode(Crypticor.ENCODING)
+                    keys[name] = self.crypt.decrypt(cache)
                 return keys.items()
                 # get a str
                 # keys_string = ""
@@ -287,7 +269,7 @@ class Crypticor:
 
     def create_user_password(self, password:str):
         # hash it and safe it in a file
-        hash_value_psw = self.hasher(password.encode(), encoder=nacl.encoding.HexEncoder)
+        hash_value_psw = self.hasher(password.encode(), encoder=Crypticor.ENCODING)
         print(hash_value_psw)
         print(type(hash_value_psw))
 
@@ -301,7 +283,7 @@ class Crypticor:
     def user_password_correct(self, password:str):
         # check with saved hash file
         # get hash value of the given password
-        check_password_hash = self.hasher(password.encode(), encoder=nacl.encoding.HexEncoder)
+        check_password_hash = self.hasher(password.encode(), encoder=Crypticor.ENCODING)
 
         # load real hashed password
         with open(f"{Crypticor.DATA_REL_PATH}/user_psw.txt", "rb") as f:
@@ -314,17 +296,21 @@ class Crypticor:
             return False
 
     def reset(self):
-        #if self.logged_in:
-        self.delete()
-        self.create_init_key()
-        self.create_steg_number(img_name=self.img_stag_setup_state, meta_data_name=self.meta_stag_setup_state, number=0)
-        self.create_steg_number(img_name=self.img_stag_key_part3, meta_data_name=self.meta_stag_key_part3, number=None)
-        self.create_steg_number(img_name=self.img_stag_user_pwd_state, meta_data_name=self.meta_stag_user_pwd_state, number=0)
+        if self.logged_in:
+            self.delete()
+            self.create_init_key()
+            self.create_steg_number(img_name=self.img_stag_setup_state, meta_data_name=self.meta_stag_setup_state, number=0)
+            self.create_steg_number(img_name=self.img_stag_key_part3, meta_data_name=self.meta_stag_key_part3, number=None)
+            self.create_steg_number(img_name=self.img_stag_user_pwd_state, meta_data_name=self.meta_stag_user_pwd_state, number=0)
 
     def delete(self):
-        key_files = [f for f in os.listdir("./data/keystore") if f.endswith(".txt")]
-        for key_file in key_files:
-            os.remove(f"./data/keystore/{key_file}")
+        private_key_files = [f for f in os.listdir("./data/keystore/PRIVATE") if f.endswith(".txt")]
+        for key_file in private_key_files:
+            os.remove(f"./data/keystore/PRIVATE/{key_file}")
+
+        public_key_files = [f for f in os.listdir("./data/keystore/PUBLIC") if f.endswith(".txt")]
+        for key_file in private_key_files:
+            os.remove(f"./data/keystore/PUBLIC/{key_file}")
 
     def exit(self):
         self.active_private_key = None
@@ -365,27 +351,35 @@ class Crypticor:
         new_meta_data.add_text(meta_data_name, str(number))
         img.save(img_name, pnginfo=new_meta_data)
 
-    def encrypt_message(self, msg:str, key:str, use_active_key_if_active=True):
+    def encrypt_message(self, msg:str, key_name:str, use_active_key_if_active=True, private_key=False):
         if self.logged_in:
-            key = key.encode(Crypticor.ENCODING)
-            msg = msg.encode(Crypticor.ENCODING)
-            if self.active_public_key != None and use_active_key_if_active:
-                box = nacl.secret.SecretBox(self.active_public_key)
-                return box.encrypt(msg)
+            key = self.get_key(key_name, private_key=private_key)
+            if private_key:
+                active_key = self.active_private_key
+            else:
+                active_key = self.active_public_key
+            msg = msg.encode("utf-8")
+            if active_key != None and use_active_key_if_active:
+                box = nacl.secret.SecretBox(active_key)
+                return box.encrypt(msg)    
             else:
                 box = nacl.secret.SecretBox(key)
-                return box.encrypt(msg)
+                return box.encrypt(msg)    
 
-    def decrypt_message(self, msg:str, key:str, use_active_key_if_active=True):
+    def decrypt_message(self, msg:str, key_name:str, use_active_key_if_active=True, private_key=True):
         if self.logged_in:
-            key = key.encode(Crypticor.ENCODING)
-            msg = msg.encode(Crypticor.ENCODING)
-            if self.active_private_key != None and use_active_key_if_active:
-                box = nacl.secret.SecretBox(self.active_private_key)
-                return box.decrypt(msg)
+            key = self.get_key(key_name, private_key=private_key)
+            if private_key:
+                active_key = self.active_private_key
+            else:
+                active_key = self.active_public_key
+            msg = msg.encode("utf-8")
+            if active_key != None and use_active_key_if_active:
+                box = nacl.secret.SecretBox(active_key)
+                return box.decrypt(msg)    
             else:
                 box = nacl.secret.SecretBox(key)
-                return box.decrypt(msg)
+                return box.decrypt(msg)    
 
 if __name__ == "__main__":
     crypt = Crypticor(reset=False)
